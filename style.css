@@ -52,7 +52,7 @@ body{
 .story-card{
   display:flex; gap:12px; align-items:flex-start;
   background:var(--panel-2); border:1px solid var(--line);
-  padding:12px 14px; border-radius:12px; margin-bottom:12px;
+  padding:12px 14px; border-radius:12px; margin-bottom:8px;
   animation:fadeIn .35s ease;
 }
 .story-icon{
@@ -76,6 +76,13 @@ body{
 }
 .character-name{ font-weight:bold; color:#e2e8f0; margin-bottom:4px; }
 .character-text{ line-height:1.4; }
+
+/* ✅ Actions for dialogue (global) */
+.dialogue-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:6px;
+}
 
 /* BOX */
 .question-box{
