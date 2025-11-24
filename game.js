@@ -124,6 +124,14 @@ const levelCounterEl = document.getElementById("levelCounter");
 const progressBarEl = document.getElementById("progressBar");
 
 // --- sounds ---
+function s(id){
+  const el = document.getElementById(id);
+  if(el){
+    el.currentTime = 0;
+    el.play().catch(()=>{});
+  }
+}
+
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 function ensureAudio(){ if(!audioCtx) audioCtx = new AudioCtx(); }
@@ -211,6 +219,7 @@ function renderDialogue(lvl){
   hideAllBoxes();
   storyEl.textContent = lvl.story || "";  // קריין קצר (אופציונלי)
   showCharacter(lvl);
+  s("sndDialogue");
   dialogueNextBtn.classList.remove("hidden");
 }
 
@@ -249,12 +258,14 @@ function chooseMCQ(isCorrect, btnEl){
     feedbackEl.textContent="✅ נכון! השער נפתח!";
     feedbackEl.classList.add("correct");
     nextBtn.classList.remove("hidden");
+    s("sndCorrect");
   }else{
     beep(220,0.15);
     btnEl.classList.add("wrong");
     feedbackEl.textContent="❌ לא נכון, נסו שוב.";
     feedbackEl.classList.add("wrong");
     setTimeout(()=>btnEl.classList.remove("wrong"),450);
+    s("sndWrong");
   }
 }
 
@@ -274,10 +285,13 @@ function renderCode(lvl){
       feedbackEl.textContent="✅ מעולה! זה קוד נכון.";
       feedbackEl.className="correct";
       nextFromCodeBtn.classList.remove("hidden");
+      s("sndCorrect")
     }else{
       beep(220,0.15);
       feedbackEl.textContent="❌ כמעט… נסו שוב.";
       feedbackEl.className="wrong";
+      s("sndWrong");
+
     }
   };
 }
@@ -351,14 +365,18 @@ function renderLevel(){
 }
 
 function goNext(){
-  levelIndex++;
-  if(levelIndex>=levels.length) levelIndex=0;
-  renderLevel();
+  s("sndClick");
+
+  const gameEl = document.querySelector(".game");
+  gameEl.classList.add("slide-out");
+
+  setTimeout(()=>{
+    gameEl.classList.remove("slide-out");
+    gameEl.classList.add("slide-in");
+    setTimeout(()=>gameEl.classList.remove("slide-in"), 350);
+
+    levelIndex++;
+    if(levelIndex>=levels.length) levelIndex=0;
+    renderLevel();
+  }, 350);
 }
-
-nextBtn.onclick=goNext;
-nextFromCodeBtn.onclick=goNext;
-nextFromDragBtn.onclick=goNext;
-dialogueNextBtn.onclick=goNext;
-
-renderLevel();
