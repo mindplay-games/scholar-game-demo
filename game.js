@@ -1,8 +1,8 @@
-// --- קוראים איזה פרק לפתוח מה-URL ---
+// 1) קוראים איזה פרק לפתוח מה-URL
 const params = new URLSearchParams(window.location.search);
-const chapter = Number(params.get("chapter") || 1);
+const chapterNum = Number(params.get("chapter") || 1);
 
-// --- מגדירים פרקים ----
+// 2) מגדירים פרקים (שונים!)
 const chapters = {
   1: [
     {
@@ -51,9 +51,10 @@ const chapters = {
   ]
 };
 
-// --- בוחרים את הפרק לפי chapter ---
-let levels = chapters[chapter] || chapters[1];
+// 3) בוחרים את levels לפי הפרק
+let levels = chapters[chapterNum] || chapters[1];
 
+// 4) מנוע המשחק (כמו שהיה)
 let levelIndex = 0;
 let locked = false;
 
