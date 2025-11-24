@@ -305,49 +305,85 @@ function renderDrag(lvl){
   dragItemsEl.innerHTML="";
   dragTargetEl.innerHTML="";
 
-  lvl.items.forEach(text=>{
-    const chip=document.createElement("div");
-    chip.className="drag-chip";
-    chip.draggable=true;
-    chip.textContent=text;
-    chip.addEventListener("dragstart", e=>{
-      e.dataTransfer.setData("text/plain", text);
-    });
+  // יוצרים צ'יפים מקוריים עם ID ייחודי
+  lvl.items.forEach((text, idx)=>{
+    const chip = createDragChip(text, idx);
     dragItemsEl.appendChild(chip);
   });
 
-  [dragItemsEl, dragTargetEl].forEach(zone=>{
-    zone.addEventListener("dragover", e=>e.preventDefault());
-    zone.addEventListener("drop", e=>{
-      e.preventDefault();
-      const text=e.dataTransfer.getData("text/plain");
-      const chip=document.createElement("div");
-      chip.className="drag-chip";
-      chip.draggable=true;
-      chip.textContent=text;
-      chip.addEventListener("dragstart", ev=>{
-        ev.dataTransfer.setData("text/plain", text);
-      });
-      zone.appendChild(chip);
-    });
-  });
+  // מאפשרים drop בשתי הקופסאות
+  enableDropZone(dragItemsEl);
+  enableDropZone(dragTargetEl);
 
   checkDragBtn.onclick=()=>{
     const current=[...dragTargetEl.querySelectorAll(".drag-chip")]
-      .map(c=>c.textContent);
-    const ok=JSON.stringify(current)===JSON.stringify(lvl.targetOrder);
+      .map(c=>c.dataset.value);
+
+    const ok = JSON.stringify(current) === JSON.stringify(lvl.targetOrder);
     if(ok){
       beep(880,0.12);
       feedbackEl.textContent="✅ סדר מושלם!";
       feedbackEl.className="correct";
       nextFromDragBtn.classList.remove("hidden");
+      s("sndCorrect");
     }else{
       beep(220,0.15);
       feedbackEl.textContent="❌ הסדר עדיין לא נכון. נסו שוב.";
       feedbackEl.className="wrong";
+      s("sndWrong");
     }
   };
 }
+
+// ------- helpers for drag -------
+
+// יוצר chip יחיד (אפשר לגרור/להחזיר)
+function createDragChip(text, idx){
+  const chip=document.createElement("div");
+  chip.className="drag-chip";
+  chip.draggable=true;
+
+  chip.textContent=text;
+  chip.dataset.value=text;       // הערך האמיתי להשוואה
+  chip.dataset.id = "chip-"+idx; // id ייחודי
+
+  chip.addEventListener("dragstart", e=>{
+    e.dataTransfer.setData("text/id", chip.dataset.id);
+  });
+
+  // קליק מחזיר לצד השני
+  chip.addEventListener("click", ()=>{
+    const parent = chip.parentElement;
+    if(parent === dragTargetEl){
+      dragItemsEl.appendChild(chip);
+    }else{
+      dragTargetEl.appendChild(chip);
+    }
+  });
+
+  return chip;
+}
+
+// הופך אלמנט לאזור drop שמזיז את הצ'יפ, לא משכפל
+function enableDropZone(zone){
+  zone.addEventListener("dragover", e=>e.preventDefault());
+
+  zone.addEventListener("drop", e=>{
+    e.preventDefault();
+
+    const id = e.dataTransfer.getData("text/id");
+    if(!id) return;
+
+    const chip = document.querySelector(`[data-id="${id}"]`);
+    if(!chip) return;
+
+    // אם גוררים לאותו מקום — לא עושים כלום
+    if(chip.parentElement === zone) return;
+
+    zone.appendChild(chip); // ✅ move (לא copy)
+  });
+}
+
 
 // --- main ---
 function renderLevel(){
