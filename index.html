@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MindPlay – הרפתקת פייתון</title>
   <link rel="stylesheet" href="style.css"/>
-
-  <!-- אופציונלי: אם יש בעיות הטמעה במערכות מסוימות -->
-  <!-- <meta http-equiv="Content-Security-Policy" content="frame-ancestors *;"> -->
 </head>
 <body>
 
@@ -29,22 +26,61 @@
       </div>
     </header>
 
-    <!-- STORY -->
+    <!-- STORY / DIALOGUE CARD -->
     <section class="story-card">
       <div class="story-icon" id="storyIcon">✨</div>
-      <p id="story">
-        טוען סיפור...
-      </p>
+      <div class="story-content">
+        <div id="characterRow" class="character-row hidden">
+          <img id="characterAvatar" class="avatar" alt="" />
+          <div>
+            <div id="characterName" class="character-name"></div>
+            <div id="characterText" class="character-text"></div>
+          </div>
+        </div>
+
+        <p id="story" class="story-text">טוען סיפור...</p>
+      </div>
     </section>
 
-    <!-- QUESTION + ANSWERS -->
-    <section class="question-box">
+    <!-- MCQ -->
+    <section id="mcqBox" class="question-box">
       <p id="question">טוען שאלה...</p>
       <div id="answers" class="answers"></div>
 
       <div class="actions">
         <button id="hintBtn" class="ghost">רמז 💡</button>
         <button id="nextBtn" class="hidden">לשלב הבא ➜</button>
+      </div>
+    </section>
+
+    <!-- CODE (open answer, one line) -->
+    <section id="codeBox" class="question-box hidden">
+      <p id="codePrompt"></p>
+      <input id="codeInput" class="code-input" placeholder="כתוב כאן שורת קוד אחת..." />
+      <div class="actions">
+        <button id="runCodeBtn">בדוק ✅</button>
+        <button id="nextFromCodeBtn" class="hidden">לשלב הבא ➜</button>
+      </div>
+    </section>
+
+    <!-- DRAG -->
+    <section id="dragBox" class="question-box hidden">
+      <p id="dragPrompt"></p>
+      <div class="drag-area">
+        <div>
+          <div class="drag-title">חלקים לגרירה</div>
+          <div id="dragItems" class="drag-items"></div>
+        </div>
+
+        <div>
+          <div class="drag-title">סדר נכון</div>
+          <div id="dragTarget" class="drag-target"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="checkDragBtn">בדוק ✅</button>
+        <button id="nextFromDragBtn" class="hidden">לשלב הבא ➜</button>
       </div>
     </section>
 
