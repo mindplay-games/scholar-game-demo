@@ -1,32 +1,58 @@
-const levels = [
-  {
-    story: "שלב 1: את/ה רואה שער נעול. איזה קוד מדפיס 'Hello'?",
-    question: "מה הקוד הנכון?",
-    answers: [
-      { text: "print('Hello')", correct: true },
-      { text: "echo('Hello')", correct: false },
-      { text: "printf('Hello')", correct: false },
-      { text: "console.log('Hello')", correct: false },
-    ]
-  },
-  {
-    story: "שלב 2: גשר קסום מופיע רק אם תנאי נכון.",
-    question: "מה יצא מהקוד?\n\nx=3\nif x>5:\n  print('A')\nelse:\n  print('B')",
-    answers: [
-      { text: "A", correct: false },
-      { text: "B", correct: true },
-      { text: "לא יודפס כלום", correct: false },
-      { text: "Error", correct: false },
-    ]
-  },
-  {
-    story: "שלב 3: הגעת לאוצר 🎉",
-    question: "כל הכבוד! סיימת דמו.",
-    answers: [
-      { text: "לשחק שוב", correct: true }
-    ]
-  }
-];
+// --- קוראים איזה פרק לפתוח מה-URL ---
+const params = new URLSearchParams(window.location.search);
+const chapter = Number(params.get("chapter") || 1);
+
+// --- מגדירים פרקים ----
+const chapters = {
+  1: [
+    {
+      story: "פרק 1 – שלב 1: שער הכניסה נעול.",
+      question: "איזה קוד מדפיס Hello?",
+      answers: [
+        { text: "print('Hello')", correct: true },
+        { text: "echo('Hello')", correct: false },
+        { text: "printf('Hello')", correct: false },
+        { text: "console.log('Hello')", correct: false },
+      ]
+    },
+    {
+      story: "פרק 1 – שלב 2: צריך משתנה כדי להדליק לפיד.",
+      question: "מה הפלט?\nx = 5\nprint(x)",
+      answers: [
+        { text: "5", correct: true },
+        { text: "x", correct: false },
+        { text: "print(x)", correct: false },
+        { text: "Error", correct: false },
+      ]
+    }
+  ],
+
+  2: [
+    {
+      story: "פרק 2 – שלב 1: היער דורש תנאי.",
+      question: "מה הפלט?\nx=3\nif x>5:\n print('A')\nelse:\n print('B')",
+      answers: [
+        { text: "A", correct: false },
+        { text: "B", correct: true },
+        { text: "לא יודפס כלום", correct: false },
+        { text: "Error", correct: false },
+      ]
+    },
+    {
+      story: "פרק 2 – שלב 2: עוד תנאי קטן.",
+      question: "איזה סימן זה 'שווה ל' בפייתון?",
+      answers: [
+        { text: "==", correct: true },
+        { text: "=", correct: false },
+        { text: "!=", correct: false },
+        { text: "=>", correct: false },
+      ]
+    }
+  ]
+};
+
+// --- בוחרים את הפרק לפי chapter ---
+let levels = chapters[chapter] || chapters[1];
 
 let levelIndex = 0;
 let locked = false;
@@ -68,7 +94,7 @@ function chooseAnswer(isCorrect) {
   } else {
     feedbackEl.textContent = "❌ לא נכון, נסו שוב.";
     feedbackEl.classList.add("wrong");
-    locked = false; // מאפשר להמשיך לבחור
+    locked = false;
   }
 }
 
