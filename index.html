@@ -3,23 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MindPlay Demo Game</title>
+  <title>MindPlay – הרפתקת פייתון</title>
   <link rel="stylesheet" href="style.css"/>
+
+  <!-- אופציונלי: אם יש בעיות הטמעה במערכות מסוימות -->
+  <!-- <meta http-equiv="Content-Security-Policy" content="frame-ancestors *;"> -->
 </head>
 <body>
+
   <div class="game">
-    <h1>🧠 MindPlay – משחק דמו</h1>
-    <p id="story">
-      את/ה בתוך יער קסום. כדי לצאת צריך לענות נכון על שאלה בפייתון.
-    </p>
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="emoji">🧠</span>
+        <h1>MindPlay – הרפתקת פייתון</h1>
+      </div>
 
-    <div class="question-box">
-      <p id="question"></p>
+      <div class="chapter-line">
+        <span id="chapterTitle">פרק 1</span>
+        <span id="levelCounter">שלב 1/6</span>
+      </div>
+
+      <div class="progress-wrap" aria-label="progress">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+    </header>
+
+    <!-- STORY -->
+    <section class="story-card">
+      <div class="story-icon" id="storyIcon">✨</div>
+      <p id="story">
+        טוען סיפור...
+      </p>
+    </section>
+
+    <!-- QUESTION + ANSWERS -->
+    <section class="question-box">
+      <p id="question">טוען שאלה...</p>
       <div id="answers" class="answers"></div>
-    </div>
 
+      <div class="actions">
+        <button id="hintBtn" class="ghost">רמז 💡</button>
+        <button id="nextBtn" class="hidden">לשלב הבא ➜</button>
+      </div>
+    </section>
+
+    <!-- FEEDBACK -->
     <p id="feedback"></p>
-    <button id="nextBtn" class="hidden">לשלב הבא ➜</button>
   </div>
 
   <script src="game.js"></script>
