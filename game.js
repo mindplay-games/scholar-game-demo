@@ -11,7 +11,6 @@ const chapterNum = Number(params.get("chapter") || 1);
 // --- Chapters data ---
 const chapters = {
   1: [
-    // 0) פתיחה קולנועית
     {
       type: "dialogue",
       icon: "🏰",
@@ -20,8 +19,6 @@ const chapters = {
       text: "ברוך הבא! כדי לפתוח את השער נצטרך ללמוד כישוף חדש: print."
       // avatar: "assets/prof.png"
     },
-
-    // 1) MCQ ראשון
     {
       type: "mcq",
       icon: "🚪",
@@ -35,18 +32,14 @@ const chapters = {
         { text: "printf('Hello')", correct: false }
       ]
     },
-
-    // 2) באגון נכנס
     {
       type: "dialogue",
       icon: "😈",
+      story: "רחש מוזר… מישהו צוחק בין הצללים.",
       character: "באגון",
-      text: "חחח! אני בלבלתי לכם את השער. נראה אם תצליחו להדפיס באמת!",
-      story: "רחש מוזר… מישהו צוחק בין הצללים."
+      text: "חחח! אני בלבלתי לכם את השער. נראה אם תצליחו להדפיס באמת!"
       // avatar: "assets/bugon.png"
     },
-
-    // 3) קוד פתוח – שורה אחת
     {
       type: "code",
       icon: "✨",
@@ -58,8 +51,6 @@ const chapters = {
         patterns: ["print('Magic')", 'print("Magic")']
       }
     },
-
-    // 4) גרירה – סידור כישוף
     {
       type: "drag",
       icon: "🧩",
@@ -68,8 +59,6 @@ const chapters = {
       items: ["'Hi'", "print(", ")"],
       targetOrder: ["print(", "'Hi'", ")"]
     },
-
-    // 5) MCQ – הבדל טקסט/מספר
     {
       type: "mcq",
       icon: "🔦",
@@ -83,14 +72,12 @@ const chapters = {
         { text: "Error", correct: false }
       ]
     },
-
-    // 6) סיום פרק
     {
       type: "dialogue",
       icon: "🏆",
+      story: "האור מציף את המסדרון… ההרפתקה רק מתחילה.",
       character: "פרופסור פיקסל",
-      text: "מדהים! השער נפתח. עכשיו אתה קוסם Print רשמי. בפרק הבא נלמד מספרים ומשתנים!",
-      story: "האור מציף את המסדרון… ההרפתקה רק מתחילה."
+      text: "מדהים! השער נפתח. בפרק הבא נלמד מספרים ומשתנים!"
     }
   ]
 };
@@ -109,6 +96,8 @@ const characterRow = document.getElementById("characterRow");
 const characterAvatar = document.getElementById("characterAvatar");
 const characterName = document.getElementById("characterName");
 const characterText = document.getElementById("characterText");
+
+const dialogueNextBtn = document.getElementById("dialogueNextBtn");
 
 const mcqBox = document.getElementById("mcqBox");
 const questionEl = document.getElementById("question");
@@ -168,9 +157,10 @@ function hideAllBoxes(){
   nextBtn.classList.add("hidden");
   nextFromCodeBtn.classList.add("hidden");
   nextFromDragBtn.classList.add("hidden");
+  dialogueNextBtn.classList.add("hidden");
 }
 
-// ✅ FIX: אין כפילות טקסט. כשיש דמות—מסתירים storyEl הרגיל.
+// אין כפילות טקסט: כשיש דמות — מסתירים storyEl הרגיל
 function showCharacter(lvl){
   const hasChar = !!(lvl.character || lvl.text);
   if(hasChar){
@@ -221,7 +211,7 @@ function renderDialogue(lvl){
   hideAllBoxes();
   storyEl.textContent = lvl.story || "";  // קריין קצר (אופציונלי)
   showCharacter(lvl);
-  nextBtn.classList.remove("hidden");
+  dialogueNextBtn.classList.remove("hidden");
 }
 
 function renderMCQ(lvl){
@@ -301,7 +291,6 @@ function renderDrag(lvl){
   dragItemsEl.innerHTML="";
   dragTargetEl.innerHTML="";
 
-  // chips
   lvl.items.forEach(text=>{
     const chip=document.createElement("div");
     chip.className="drag-chip";
@@ -313,7 +302,6 @@ function renderDrag(lvl){
     dragItemsEl.appendChild(chip);
   });
 
-  // drop zones
   [dragItemsEl, dragTargetEl].forEach(zone=>{
     zone.addEventListener("dragover", e=>e.preventDefault());
     zone.addEventListener("drop", e=>{
@@ -362,15 +350,15 @@ function renderLevel(){
   return renderMCQ(lvl);
 }
 
-// next buttons
-nextBtn.onclick=goNext;
-nextFromCodeBtn.onclick=goNext;
-nextFromDragBtn.onclick=goNext;
-
 function goNext(){
   levelIndex++;
   if(levelIndex>=levels.length) levelIndex=0;
   renderLevel();
 }
+
+nextBtn.onclick=goNext;
+nextFromCodeBtn.onclick=goNext;
+nextFromDragBtn.onclick=goNext;
+dialogueNextBtn.onclick=goNext;
 
 renderLevel();
