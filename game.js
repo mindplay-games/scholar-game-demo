@@ -380,3 +380,13 @@ function goNext(){
     renderLevel();
   }, 350);
 }
+
+// מחברים את כל כפתורי ההמשך
+nextBtn.onclick = goNext;
+nextFromCodeBtn.onclick = goNext;
+nextFromDragBtn.onclick = goNext;
+dialogueNextBtn.onclick = goNext;
+
+// מריצים את השלב הראשון
+renderLevel();
+
