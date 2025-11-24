@@ -14,14 +14,16 @@ const chapters = {
     {
       type: "dialogue",
       icon: "🏰",
+      bg: "assets/backgrounds/ch1-academy-gate.png",
       story: "לילה באקדמיה… השער רועד כאילו משהו בפנים תקוע.",
       character: "פרופסור פיקסל",
+      avatar: "assets/characters/prof-pixel.png",
       text: "ברוך הבא! כדי לפתוח את השער נצטרך ללמוד כישוף חדש: print."
-      // avatar: "assets/prof.png"
     },
     {
       type: "mcq",
       icon: "🚪",
+      bg: "assets/backgrounds/ch1-academy-gate.png",
       story: "שלב 1: השער נפתח רק אם מדפיסים את המילה הנכונה.",
       hint: "רמז: בפייתון מדפיסים עם print",
       question: "איזה קוד מדפיס 'Hello'?",
@@ -35,14 +37,16 @@ const chapters = {
     {
       type: "dialogue",
       icon: "😈",
+      bg: "assets/backgrounds/ch1-hallway.png",
       story: "רחש מוזר… מישהו צוחק בין הצללים.",
       character: "באגון",
+      avatar: "assets/characters/bugon.png",
       text: "חחח! אני בלבלתי לכם את השער. נראה אם תצליחו להדפיס באמת!"
-      // avatar: "assets/bugon.png"
     },
     {
       type: "code",
       icon: "✨",
+      bg: "assets/backgrounds/ch1-hallway.png",
       story: "שלב 2: עכשיו את/ה כותב/ת קוד אמיתי.",
       prompt: "כתוב/כתבי שורה אחת שמדפיסה: Magic",
       hint: "שימי/שים את Magic בתוך גרשיים.",
@@ -54,6 +58,7 @@ const chapters = {
     {
       type: "drag",
       icon: "🧩",
+      bg: "assets/backgrounds/ch1-hallway.png",
       story: "שלב 3: באגון פירק את הכישוף לחלקים!",
       prompt: "גרור/י לסדר נכון כדי ליצור: print('Hi')",
       items: ["'Hi'", "print(", ")"],
@@ -62,6 +67,7 @@ const chapters = {
     {
       type: "mcq",
       icon: "🔦",
+      bg: "assets/backgrounds/ch1-hallway.png",
       story: "שלב 4: כדי להדליק לפיד — צריך להדפיס מספר.",
       hint: "מספרים לא צריכים גרשיים.",
       question: "מה ידפיס הקוד הבא?\n\nprint(7)",
@@ -75,12 +81,49 @@ const chapters = {
     {
       type: "dialogue",
       icon: "🏆",
+      bg: "assets/backgrounds/ch1-academy-gate.png",
       story: "האור מציף את המסדרון… ההרפתקה רק מתחילה.",
-      character: "פרופסור פיקסל",
+      character: "פיית הקוד",
+      avatar: "assets/characters/fairy-code.png",
       text: "מדהים! השער נפתח. בפרק הבא נלמד מספרים ומשתנים!"
+    }
+  ],
+
+  // (דוגמה קצרה לחיבור נכסים גם לפרק 2)
+  2: [
+    {
+      type: "dialogue",
+      bg: "assets/backgrounds/ch2-forest.png",
+      character: "גיבור/ה",
+      avatar: "assets/characters/student-hero.png",
+      text: "נכנסנו ליער ההחלטות… כאן נלמד תנאים!"
+    },
+    {
+      type: "mcq",
+      bg: "assets/backgrounds/ch2-bridge.png",
+      story: "הגשר דורש החלטה נכונה.",
+      question: "איזה סימן זה 'שווה ל' בפייתון?",
+      answers: [
+        { text: "==", correct: true },
+        { text: "=", correct: false },
+        { text: "!=", correct: false },
+        { text: "=>", correct: false }
+      ]
+    }
+  ],
+
+  // (דוגמה קצרה לפרק 3 - מעבדה)
+  3: [
+    {
+      type: "dialogue",
+      bg: "assets/backgrounds/ch3-lab.png",
+      character: "פרופסור פיקסל",
+      avatar: "assets/characters/prof-pixel.png",
+      text: "ברוך הבא למעבדה! פה נלמד משתנים."
     }
   ]
 };
+
 
 let levels = chapters[chapterNum] || chapters[1];
 
@@ -392,6 +435,13 @@ function renderLevel(){
   setTopUI();
 
   const lvl=levels[levelIndex];
+
+  // ✅ רקע לפי שלב
+  if (lvl.bg) {
+    document.body.style.background =
+      `url('${lvl.bg}') center/cover fixed no-repeat`;
+  }
+
   storyIconEl.textContent = lvl.icon || "✨";
 
   if(lvl.type==="dialogue") return renderDialogue(lvl);
