@@ -1,7 +1,7 @@
 // ===============================
-// MindPlay Python Adventure - game.js (FULL)
-// Supports: dialogue / mcq / code (one line) / drag
-// Chapters via ?chapter=1,2,...
+// MindPlay Python Adventure - game.js
+// types: dialogue / mcq / code / drag
+// chapters via ?chapter=1,2,...
 // ===============================
 
 // --- chapter param ---
@@ -9,24 +9,24 @@ const params = new URLSearchParams(window.location.search);
 const chapterNum = Number(params.get("chapter") || 1);
 
 // --- Chapters data ---
-// For each level:
-// type: "dialogue" | "mcq" | "code" | "drag"
-// optional: icon, hint, character, avatar, text, bg, etc.
 const chapters = {
   1: [
+    // 0) פתיחה קולנועית
     {
       type: "dialogue",
       icon: "🏰",
+      story: "לילה באקדמיה… השער רועד כאילו משהו בפנים תקוע.",
       character: "פרופסור פיקסל",
-      // avatar: "assets/prof.png", // אפשר להוסיף כשתעלי איורים
-      text: "ברוך הבא לאקדמיה! כדי לפתוח את השער נלמד היום את כישוף ההדפסה: print."
+      text: "ברוך הבא! כדי לפתוח את השער נצטרך ללמוד כישוף חדש: print."
+      // avatar: "assets/prof.png"
     },
 
+    // 1) MCQ ראשון
     {
       type: "mcq",
-      story: "פרק 1 – שלב 1: שער הכניסה נעול.",
       icon: "🚪",
-      hint: "בפייתון מדפיסים עם print",
+      story: "שלב 1: השער נפתח רק אם מדפיסים את המילה הנכונה.",
+      hint: "רמז: בפייתון מדפיסים עם print",
       question: "איזה קוד מדפיס 'Hello'?",
       answers: [
         { text: "print('Hello')", correct: true },
@@ -36,38 +36,45 @@ const chapters = {
       ]
     },
 
+    // 2) באגון נכנס
     {
       type: "dialogue",
       icon: "😈",
       character: "באגון",
-      text: "חחח! אני טרפתי לכם את הקוד. נראה אם תצליחו להדפיס נכון!"
+      text: "חחח! אני בלבלתי לכם את השער. נראה אם תצליחו להדפיס באמת!",
+      story: "רחש מוזר… מישהו צוחק בין הצללים."
+      // avatar: "assets/bugon.png"
     },
 
+    // 3) קוד פתוח – שורה אחת
     {
       type: "code",
-      story: "פרק 1 – שלב 2: כתיבת קוד אמיתי!",
       icon: "✨",
-      prompt: "הקלד/י שורה אחת שמדפיסה: Magic",
-      hint: "שורה אחת. אל תשכח/י גרשיים.",
+      story: "שלב 2: עכשיו את/ה כותב/ת קוד אמיתי.",
+      prompt: "כתוב/כתבי שורה אחת שמדפיסה: Magic",
+      hint: "שימי/שים את Magic בתוך גרשיים.",
       validator: {
         mode: "exact",
         patterns: ["print('Magic')", 'print("Magic")']
       }
     },
 
+    // 4) גרירה – סידור כישוף
     {
       type: "drag",
-      story: "פרק 1 – שלב 3: סידור כישוף",
       icon: "🧩",
-      prompt: "גרור/י את החלקים לסדר נכון כדי ליצור: print('Hi')",
+      story: "שלב 3: באגון פירק את הכישוף לחלקים!",
+      prompt: "גרור/י לסדר נכון כדי ליצור: print('Hi')",
       items: ["'Hi'", "print(", ")"],
       targetOrder: ["print(", "'Hi'", ")"]
     },
 
+    // 5) MCQ – הבדל טקסט/מספר
     {
       type: "mcq",
-      story: "פרק 1 – שלב 4: הדפסה של מספר",
       icon: "🔦",
+      story: "שלב 4: כדי להדליק לפיד — צריך להדפיס מספר.",
+      hint: "מספרים לא צריכים גרשיים.",
       question: "מה ידפיס הקוד הבא?\n\nprint(7)",
       answers: [
         { text: "7", correct: true },
@@ -75,6 +82,15 @@ const chapters = {
         { text: "print(7)", correct: false },
         { text: "Error", correct: false }
       ]
+    },
+
+    // 6) סיום פרק
+    {
+      type: "dialogue",
+      icon: "🏆",
+      character: "פרופסור פיקסל",
+      text: "מדהים! השער נפתח. עכשיו אתה קוסם Print רשמי. בפרק הבא נלמד מספרים ומשתנים!",
+      story: "האור מציף את המסדרון… ההרפתקה רק מתחילה."
     }
   ]
 };
@@ -133,16 +149,11 @@ function beep(freq=440, duration=0.12){
 }
 
 // --- helpers ---
-function setTopUI() {
-  if (chapterTitleEl) chapterTitleEl.textContent = `פרק ${chapterNum}`;
-  if (levelCounterEl)
-    levelCounterEl.textContent = `שלב ${levelIndex + 1}/${levels.length}`;
-
-  if (progressBarEl) {
-    const denom = levels.length - 1 || 1;
-    const pct = (levelIndex / denom) * 100;
-    progressBarEl.style.width = `${pct}%`;
-  }
+function setTopUI(){
+  chapterTitleEl.textContent = `פרק ${chapterNum}`;
+  levelCounterEl.textContent = `שלב ${levelIndex+1}/${levels.length}`;
+  const denom = levels.length-1 || 1;
+  progressBarEl.style.width = `${(levelIndex/denom)*100}%`;
 }
 
 function resetFeedback(){
@@ -159,11 +170,14 @@ function hideAllBoxes(){
   nextFromDragBtn.classList.add("hidden");
 }
 
+// ✅ FIX: אין כפילות טקסט. כשיש דמות—מסתירים storyEl הרגיל.
 function showCharacter(lvl){
-  if(lvl.character || lvl.text){
+  const hasChar = !!(lvl.character || lvl.text);
+  if(hasChar){
     characterRow.classList.remove("hidden");
     characterName.textContent = lvl.character || "";
     characterText.textContent = lvl.text || "";
+
     if(lvl.avatar){
       characterAvatar.src = lvl.avatar;
       characterAvatar.classList.remove("hidden");
@@ -171,8 +185,11 @@ function showCharacter(lvl){
     }else{
       characterAvatar.classList.add("hidden");
     }
+
+    storyEl.classList.add("hidden");
   }else{
     characterRow.classList.add("hidden");
+    storyEl.classList.remove("hidden");
   }
 }
 
@@ -186,9 +203,7 @@ function normalize(s){
 
 function validateCode(userInput, validator){
   const user = normalize(userInput);
-
   if(!validator) return false;
-
   if(validator.mode==="exact"){
     return validator.patterns.some(p => user === normalize(p));
   }
@@ -204,7 +219,7 @@ function validateCode(userInput, validator){
 // --- renderers ---
 function renderDialogue(lvl){
   hideAllBoxes();
-  storyEl.textContent = lvl.text || lvl.story || "";
+  storyEl.textContent = lvl.story || "";  // קריין קצר (אופציונלי)
   showCharacter(lvl);
   nextBtn.classList.remove("hidden");
 }
@@ -217,21 +232,20 @@ function renderMCQ(lvl){
   questionEl.textContent = lvl.question || "";
   answersEl.innerHTML = "";
 
-  lvl.answers.forEach((a) => {
-    const btn = document.createElement("button");
-    btn.className = "answer-btn";
-    btn.textContent = a.text;
-    btn.onclick = () => chooseMCQ(a.correct, btn);
+  lvl.answers.forEach((a)=>{
+    const btn=document.createElement("button");
+    btn.className="answer-btn";
+    btn.textContent=a.text;
+    btn.onclick=()=>chooseMCQ(a.correct, btn);
     answersEl.appendChild(btn);
   });
 
-  // hint
   hintBtn.onclick = () => {
-    if (lvl.hint) {
-      feedbackEl.textContent = "💡 רמז: " + lvl.hint;
+    if(lvl.hint){
+      feedbackEl.textContent="💡 רמז: "+lvl.hint;
       feedbackEl.className="";
-    } else {
-      feedbackEl.textContent = "אין רמז בשלב הזה 🙂";
+    }else{
+      feedbackEl.textContent="אין רמז בשלב הזה 🙂";
       feedbackEl.className="";
     }
   };
@@ -240,8 +254,7 @@ function renderMCQ(lvl){
 function chooseMCQ(isCorrect, btnEl){
   if(locked) return;
   if(isCorrect){
-    locked=true;
-    beep(880,0.12);
+    locked=true; beep(880,0.12);
     btnEl.classList.add("correct");
     feedbackEl.textContent="✅ נכון! השער נפתח!";
     feedbackEl.classList.add("correct");
@@ -258,14 +271,14 @@ function chooseMCQ(isCorrect, btnEl){
 function renderCode(lvl){
   hideAllBoxes();
   codeBox.classList.remove("hidden");
-  showCharacter({}); // hide character row
+  showCharacter({});
   storyEl.textContent = lvl.story || "";
   codePromptEl.textContent = lvl.prompt || "כתוב/י קוד:";
-  codeInputEl.value = "";
+  codeInputEl.value="";
   codeInputEl.focus();
 
-  runCodeBtn.onclick = () => {
-    const ok = validateCode(codeInputEl.value, lvl.validator);
+  runCodeBtn.onclick=()=>{
+    const ok=validateCode(codeInputEl.value, lvl.validator);
     if(ok){
       beep(880,0.12);
       feedbackEl.textContent="✅ מעולה! זה קוד נכון.";
@@ -282,54 +295,45 @@ function renderCode(lvl){
 function renderDrag(lvl){
   hideAllBoxes();
   dragBox.classList.remove("hidden");
-  showCharacter({}); // hide character row
+  showCharacter({});
   storyEl.textContent = lvl.story || "";
   dragPromptEl.textContent = lvl.prompt || "גרור/י לסדר נכון:";
   dragItemsEl.innerHTML="";
   dragTargetEl.innerHTML="";
 
-  // create chips
+  // chips
   lvl.items.forEach(text=>{
-    const chip = document.createElement("div");
+    const chip=document.createElement("div");
     chip.className="drag-chip";
     chip.draggable=true;
     chip.textContent=text;
-
     chip.addEventListener("dragstart", e=>{
-      chip.classList.add("dragging");
       e.dataTransfer.setData("text/plain", text);
-      e.dataTransfer.setData("from", "items");
     });
-    chip.addEventListener("dragend", ()=> chip.classList.remove("dragging"));
-
     dragItemsEl.appendChild(chip);
   });
 
   // drop zones
   [dragItemsEl, dragTargetEl].forEach(zone=>{
-    zone.addEventListener("dragover", e=> e.preventDefault());
+    zone.addEventListener("dragover", e=>e.preventDefault());
     zone.addEventListener("drop", e=>{
       e.preventDefault();
-      const text = e.dataTransfer.getData("text/plain");
-      // create new chip in drop zone
-      const chip = document.createElement("div");
+      const text=e.dataTransfer.getData("text/plain");
+      const chip=document.createElement("div");
       chip.className="drag-chip";
       chip.draggable=true;
       chip.textContent=text;
-
       chip.addEventListener("dragstart", ev=>{
-        chip.classList.add("dragging");
         ev.dataTransfer.setData("text/plain", text);
       });
-      chip.addEventListener("dragend", ()=> chip.classList.remove("dragging"));
-
       zone.appendChild(chip);
     });
   });
 
-  checkDragBtn.onclick = () => {
-    const current = [...dragTargetEl.querySelectorAll(".drag-chip")].map(c=>c.textContent);
-    const ok = JSON.stringify(current) === JSON.stringify(lvl.targetOrder);
+  checkDragBtn.onclick=()=>{
+    const current=[...dragTargetEl.querySelectorAll(".drag-chip")]
+      .map(c=>c.textContent);
+    const ok=JSON.stringify(current)===JSON.stringify(lvl.targetOrder);
     if(ok){
       beep(880,0.12);
       feedbackEl.textContent="✅ סדר מושלם!";
@@ -343,25 +347,25 @@ function renderDrag(lvl){
   };
 }
 
-// --- main render ---
+// --- main ---
 function renderLevel(){
   locked=false;
   resetFeedback();
   setTopUI();
 
-  const lvl = levels[levelIndex];
+  const lvl=levels[levelIndex];
   storyIconEl.textContent = lvl.icon || "✨";
 
   if(lvl.type==="dialogue") return renderDialogue(lvl);
   if(lvl.type==="code") return renderCode(lvl);
   if(lvl.type==="drag") return renderDrag(lvl);
-  return renderMCQ(lvl); // default
+  return renderMCQ(lvl);
 }
 
 // next buttons
-nextBtn.onclick = goNext;
-nextFromCodeBtn.onclick = goNext;
-nextFromDragBtn.onclick = goNext;
+nextBtn.onclick=goNext;
+nextFromCodeBtn.onclick=goNext;
+nextFromDragBtn.onclick=goNext;
 
 function goNext(){
   levelIndex++;
