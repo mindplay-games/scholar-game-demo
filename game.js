@@ -18,7 +18,7 @@ const chapters = {
       story: "לילה באקדמיה… השער רועד כאילו משהו בפנים תקוע.",
       character: "פרופסור פיקסל",
       avatar: "assets/characters/prof-pixel.png",
-      text: "ברוך הבא! כדי לפתוח את השער נצטרך ללמוד כישוף חדש: print."
+      text: "ברוך הבא! כדי לפתוח את השער נצטרך ללמוד כישוף חדש."
     },
     {
       type: "mcq",
