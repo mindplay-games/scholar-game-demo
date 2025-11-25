@@ -165,6 +165,7 @@ const feedbackEl = document.getElementById("feedback");
 const chapterTitleEl = document.getElementById("chapterTitle");
 const levelCounterEl = document.getElementById("levelCounter");
 const progressBarEl = document.getElementById("progressBar");
+const gameEl = document.querySelector(".game");
 
 // --- sounds ---
 function s(id){
@@ -260,11 +261,15 @@ function validateCode(userInput, validator){
 // --- renderers ---
 function renderDialogue(lvl){
   hideAllBoxes();
-  storyEl.textContent = lvl.story || "";  // קריין קצר (אופציונלי)
+  gameEl.classList.add("mode-dialogue");
+  gameEl.classList.remove("mode-challenge");
+
+  storyEl.textContent = lvl.story || "";
   showCharacter(lvl);
   s("sndDialogue");
   dialogueNextBtn.classList.remove("hidden");
 }
+
 
 function renderMCQ(lvl){
   hideAllBoxes();
@@ -273,6 +278,8 @@ function renderMCQ(lvl){
   storyEl.textContent = lvl.story || "";
   questionEl.textContent = lvl.question || "";
   answersEl.innerHTML = "";
+  gameEl.classList.add("mode-challenge");
+  gameEl.classList.remove("mode-dialogue");
 
   lvl.answers.forEach((a)=>{
     const btn=document.createElement("button");
@@ -320,6 +327,8 @@ function renderCode(lvl){
   codePromptEl.textContent = lvl.prompt || "כתוב/י קוד:";
   codeInputEl.value="";
   codeInputEl.focus();
+  gameEl.classList.add("mode-challenge");
+  gameEl.classList.remove("mode-dialogue");
 
   runCodeBtn.onclick=()=>{
     const ok=validateCode(codeInputEl.value, lvl.validator);
@@ -347,6 +356,8 @@ function renderDrag(lvl){
   dragPromptEl.textContent = lvl.prompt || "גרור/י לסדר נכון:";
   dragItemsEl.innerHTML="";
   dragTargetEl.innerHTML="";
+  gameEl.classList.add("mode-challenge");
+  gameEl.classList.remove("mode-dialogue");
 
   // יוצרים צ'יפים מקוריים עם ID ייחודי
   lvl.items.forEach((text, idx)=>{
