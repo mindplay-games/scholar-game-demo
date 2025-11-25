@@ -137,7 +137,7 @@ body{
 .character-row{
   display:flex;
   gap:12px;
-  align-items:flex-start;
+  align-items:flex-end;
   margin-top:10px;
   margin-bottom:8px;
   padding:10px 12px;
@@ -147,13 +147,26 @@ body{
   box-shadow:0 14px 40px rgba(15,23,42,0.9);
 }
 
-.avatar{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  object-fit:cover;
+/* 👇 כאן התיקון: המחלקה המתאימה לתמונה היא .character-avatar */
+.character-avatar{
+  width:110px;
+  height:110px;
+  max-width:32vw;
+  object-fit:contain;
+  border-radius:22px;
   background:#020617;
   border:3px solid rgba(56,189,248,0.8);
+  flex:0 0 auto;
+}
+
+/* בועת דיבור לטקסט של הדמות */
+.character-bubble{
+  flex:1;
+  padding:8px 12px 10px;
+  border-radius:16px;
+  background:rgba(15,23,42,0.95);
+  border:1px solid rgba(148,163,184,0.55);
+  box-shadow:0 10px 28px rgba(15,23,42,0.95);
 }
 
 .character-name{
@@ -421,6 +434,11 @@ button.ghost:hover{
 
   .drag-area{
     grid-template-columns:1fr;
+  }
+
+  .character-avatar{
+    width:90px;
+    height:90px;
   }
 }
 
