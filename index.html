@@ -51,7 +51,14 @@
     </div>
 
     <!-- MCQ -->
-    <section id="mcqBox" class="question-box">
+     <!-- MCQ – משימת כישוף -->
+    <section id="mcqBox" class="question-box hidden">
+      <div class="challenge-header">
+        <div class="challenge-label">משימת כישוף</div>
+        <!-- כאן יופיע משפט הסיפור של השלב -->
+        <div id="challengeStory" class="challenge-story"></div>
+      </div>
+
       <p id="question">טוען שאלה...</p>
       <div id="answers" class="answers"></div>
 
@@ -61,15 +68,25 @@
       </div>
     </section>
 
-    <!-- CODE (open answer, one line) -->
+    <!-- CODE (תשובה פתוחה, שורת קוד אחת) -->
     <section id="codeBox" class="question-box hidden">
+      <div class="challenge-header">
+        <div class="challenge-label">משימת קוד</div>
+      </div>
+
       <p id="codePrompt"></p>
-      <input id="codeInput" class="code-input" placeholder="כתוב כאן שורת קוד אחת..." />
+      <input
+        id="codeInput"
+        class="code-input"
+        placeholder="כתוב/כתבי כאן שורת קוד אחת..."
+      />
+
       <div class="actions">
         <button id="runCodeBtn">בדוק ✅</button>
         <button id="nextFromCodeBtn" class="hidden">לשלב הבא ➜</button>
       </div>
     </section>
+
 
     <!-- DRAG -->
     <section id="dragBox" class="question-box hidden">
