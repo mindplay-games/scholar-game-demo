@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
-
 </head>
 <body>
 
@@ -36,13 +35,12 @@
       <div class="story-content">
         <!-- Dialogue block -->
         <div id="characterRow" class="character-row hidden">
-        <img id="characterAvatar" class="character-avatar" src="" alt="" />
-      
-        <div class="character-bubble">
-          <div id="characterName" class="character-name"></div>
-          <div id="characterText" class="character-text"></div>
+          <img id="characterAvatar" class="character-avatar" src="" alt="" />
+          <div class="character-bubble">
+            <div id="characterName" class="character-name"></div>
+            <div id="characterText" class="character-text"></div>
+          </div>
         </div>
-      </div>
 
         <!-- Narrator/story line -->
         <p id="story" class="story-text">טוען סיפור...</p>
@@ -54,8 +52,7 @@
       <button id="dialogueNextBtn" class="hidden">המשך ➜</button>
     </div>
 
-    <!-- MCQ -->
-     <!-- MCQ – משימת כישוף -->
+    <!-- MCQ – משימת כישוף -->
     <section id="mcqBox" class="question-box hidden">
       <div class="challenge-header">
         <div class="challenge-label">משימת כישוף</div>
@@ -91,7 +88,6 @@
       </div>
     </section>
 
-
     <!-- DRAG -->
     <section id="dragBox" class="question-box hidden">
       <p id="dragPrompt"></p>
@@ -117,6 +113,7 @@
     <!-- FEEDBACK -->
     <p id="feedback"></p>
   </div>
+
   <audio id="sndCorrect" src="assets/correct.wav" preload="auto"></audio>
   <audio id="sndWrong" src="assets/wrong.wav" preload="auto"></audio>
   <audio id="sndMagic" src="assets/magic.wav" preload="auto"></audio>
