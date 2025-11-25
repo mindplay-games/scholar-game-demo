@@ -124,7 +124,6 @@ const chapters = {
   ]
 };
 
-
 let levels = chapters[chapterNum] || chapters[1];
 
 // --- state ---
@@ -147,6 +146,9 @@ const questionEl = document.getElementById("question");
 const answersEl = document.getElementById("answers");
 const hintBtn = document.getElementById("hintBtn");
 const nextBtn = document.getElementById("nextBtn");
+
+// ⭐ חדש – כדי להכניס את הסיפור לתוך כרטיס המשימה
+const challengeStoryEl = document.getElementById("challengeStory");
 
 const codeBox = document.getElementById("codeBox");
 const codePromptEl = document.getElementById("codePrompt");
@@ -264,22 +266,29 @@ function renderDialogue(lvl){
   gameEl.classList.add("mode-dialogue");
   gameEl.classList.remove("mode-challenge");
 
+  // הסיפור הקצר (אם קיים) נשאר בשורה העליונה
   storyEl.textContent = lvl.story || "";
   showCharacter(lvl);
   s("sndDialogue");
   dialogueNextBtn.classList.remove("hidden");
 }
 
-
 function renderMCQ(lvl){
   hideAllBoxes();
-  mcqBox.classList.remove("hidden");
-  showCharacter({}); // hide character row
-  storyEl.textContent = lvl.story || "";
-  questionEl.textContent = lvl.question || "";
-  answersEl.innerHTML = "";
   gameEl.classList.add("mode-challenge");
   gameEl.classList.remove("mode-dialogue");
+
+  mcqBox.classList.remove("hidden");
+  showCharacter({});              // מסתיר את שורת הדמות
+  storyEl.textContent = "";       // לא מציגים story למעלה במצב משימה
+
+  // ⭐ הסיפור נכנס לכותרת המשימה בתוך הקופסה
+  if (challengeStoryEl) {
+    challengeStoryEl.textContent = lvl.story || "";
+  }
+
+  questionEl.textContent = lvl.question || "";
+  answersEl.innerHTML = "";
 
   lvl.answers.forEach((a)=>{
     const btn=document.createElement("button");
@@ -291,7 +300,7 @@ function renderMCQ(lvl){
 
   hintBtn.onclick = () => {
     if(lvl.hint){
-      feedbackEl.textContent="💡 רמז: "+lvl.hint;
+      feedbackEl.textContent="💡 " + lvl.hint;
       feedbackEl.className="";
     }else{
       feedbackEl.textContent="אין רמז בשלב הזה 🙂";
@@ -321,14 +330,15 @@ function chooseMCQ(isCorrect, btnEl){
 
 function renderCode(lvl){
   hideAllBoxes();
+  gameEl.classList.add("mode-challenge");
+  gameEl.classList.remove("mode-dialogue");
+
   codeBox.classList.remove("hidden");
   showCharacter({});
   storyEl.textContent = lvl.story || "";
   codePromptEl.textContent = lvl.prompt || "כתוב/י קוד:";
   codeInputEl.value="";
   codeInputEl.focus();
-  gameEl.classList.add("mode-challenge");
-  gameEl.classList.remove("mode-dialogue");
 
   runCodeBtn.onclick=()=>{
     const ok=validateCode(codeInputEl.value, lvl.validator);
@@ -337,27 +347,27 @@ function renderCode(lvl){
       feedbackEl.textContent="✅ מעולה! זה קוד נכון.";
       feedbackEl.className="correct";
       nextFromCodeBtn.classList.remove("hidden");
-      s("sndCorrect")
+      s("sndCorrect");
     }else{
       beep(220,0.15);
       feedbackEl.textContent="❌ כמעט… נסו שוב.";
       feedbackEl.className="wrong";
       s("sndWrong");
-
     }
   };
 }
 
 function renderDrag(lvl){
   hideAllBoxes();
+  gameEl.classList.add("mode-challenge");
+  gameEl.classList.remove("mode-dialogue");
+
   dragBox.classList.remove("hidden");
   showCharacter({});
   storyEl.textContent = lvl.story || "";
   dragPromptEl.textContent = lvl.prompt || "גרור/י לסדר נכון:";
   dragItemsEl.innerHTML="";
   dragTargetEl.innerHTML="";
-  gameEl.classList.add("mode-challenge");
-  gameEl.classList.remove("mode-dialogue");
 
   // יוצרים צ'יפים מקוריים עם ID ייחודי
   lvl.items.forEach((text, idx)=>{
@@ -486,4 +496,3 @@ dialogueNextBtn.onclick = goNext;
 
 // מריצים את השלב הראשון
 renderLevel();
-
